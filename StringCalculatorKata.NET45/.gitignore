@@ -1,0 +1,31 @@
+# User Files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vs
+
+# TEST CONSOLE
+*.sln
+
+
+# NCrunch
+**.ncrunchsolution
+**.ncrunchproject
+_NCrunch_StringCalculatorKata/
+
+# Generated files
+**.lock.json
+artifacts/
+packages/
+
+# Log files
+**.log
+
+#Visual Studio/Windows settings
+.vs/
+
+# Output
+[Bb]in/
+[Oo]bj/
+TestResult.xml

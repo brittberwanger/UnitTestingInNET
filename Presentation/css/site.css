@@ -1,0 +1,15 @@
+#main-title {
+    font-size: 128px;
+}
+
+ul li {
+    list-style-type: none;
+}
+
+ol li,ul li {
+    padding: 4px 0 4px 0 !important; 
+}
+
+.large-text { 
+    font-size: 100px !important;
+}

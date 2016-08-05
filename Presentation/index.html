@@ -1,0 +1,833 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Unit Testing in .NET</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css">
+    <link rel="stylesheet" href="css/site.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section id="main-title">
+                Unit Testing in .NET
+            </section>
+            <!-- ROADMAP -->
+            <section id="roadmap">
+                <h2>Roadmap</h2>
+                <ol>
+                    <li class="fragment" data-fragment-index="1">Prerequisite Terminology and Background Information</li>
+                    <li class="fragment" data-fragment-index="2">How to do Unit Testing
+                        <ul>
+                            <li class="fragment" data-fragment-index="3">Roy Osherove's TDD Kata 1 - String Calculator</li>
+                            <li class="fragment" data-fragment-index="4">Roy Osherove's TDD Kata 2 - Interactions</li>
+                            <li class="fragment" data-fragment-index="5">Dependency Injection Demonstrations</li>
+                            <li class="fragment" data-fragment-index="6">Unit Testing Tool Demonstrations</li>
+                        </ul>
+                    </li>
+                    <li class="fragment" data-fragment-index="7">How to do Unit Testing WELL</li>
+                </ol>
+            </section>
+            <!-- TERMINOLOGY -->
+            <section id="terminology">
+                <h2>Terminology</h2>
+                <p class="fragment" data-fragment-index="1">Unit Test</p>
+                <p class="fragment" data-fragment-index="2">Unit</p>
+                <p class="fragment" data-fragment-index="3">Dependency Injection</p>
+                <p class="fragment" data-fragment-index="4">Mock</p>
+            </section>
+            <!-- TEST DRIVEN DEVELOPMENT -->
+            <section id="test-driven-development">
+                <h2>Test Driven Development</h2>
+                <h3 class="fragment" data-fragment-index="1">Three Laws of TDD</h3>
+                <ol>
+                    <li class="fragment" data-fragment-index="2">You are not allowed to write any production code until you have written a failing unit test</li>
+                    <li class="fragment" data-fragment-index="3">You are not allowed to write more of a unit test than is sufficient to fail
+                        <p class="fragment" data-fragment-index="4" style="text-indent: 80px;"><b><i>Not compiling is failing</i></b></p>
+                    </li>
+                    <li class="fragment" data-fragment-index="5">You are not allowed to write more production code than is sufficient to pass the currently failing unit test</li>
+                </ol>
+            </section>
+            <!-- CODE KATAS -->
+            <section id="code-katas">
+                <h2>Code Katas</h2>
+                <h3 class="fragment" data-fragment-index="1">All about <b>PRACTICE</b></h3>
+                <p class="fragment" data-fragment-index="2">Repeated software development tasks with the end goal of making small improvements each times</p>
+                <p class="fragment" data-fragment-index="3" style="font-size: 64px !important;"><b>Do one task at a time</b></p>
+                <p class="fragment" data-fragment-index="4"><i>The trick is to learn to work incrementally</i></p>
+            </section>
+            <!-- KATA 1 -->
+            <section id="kata-1" data-markdown>s
+                <script type="text/template">
+                ## Kata 1:
+                ## String Calculator
+
+                - Create a simple String Calculator with the method `Add`  
+                  
+                _ 'Add' takes comma-delimited numbers and returns their sum _                  
+                  
+                - Throw an exception if called with any negative numbers
+                </script>
+            </section>
+            <!-- KATA 2 -->
+            <section id="kata-2">
+                <h2>Kata 2:</h2>
+                <h2>Interactions</h2>
+                <p>Continuation of the String Calculator Kata</p>
+                <p>Support interaction with the user by allowing the results to be written to the console</p>
+            </section>
+            <!-- HOW TO DO UNIT TESTING WELL -->
+            <section id="how-to-do-unit-testing-well">
+                <h2>How to do Unit Testing Well</h2>
+                <p class="fragment" data-fragment-index="1">Good Unit Test Practices</p>
+                <p class="fragment" data-fragment-index="2">Better Unit Test Practices</p>
+                <p class="fragment" data-fragment-index="3">Bad Unit Test Practices</p>
+                <p class="fragment" data-fragment-index="4">Benefits of Unit Testing</p>
+                <p class="fragment" data-fragment-index="5">What Makes Code Hard to Test?</p>
+            </section>
+            <!-- GOOD UNIT TESTING PRACTICES -->
+            <section id="good-unit-test-practices">
+                <h2>Good Unit Test Practices</h2>
+                <p class="fragment" data-fragment-index="1">Focused</p>
+                <p class="fragment" data-fragment-index="2">Repeatable</p>
+                <p class="fragment" data-fragment-index="3">Consistent</p>
+                <p class="fragment" data-fragment-index="4">Fully Isolated</p>
+                <p class="fragment" data-fragment-index="5">Easy to Implement</p>
+                <p class="fragment" data-fragment-index="6">Easy to Run</p>
+                <p class="fragment" data-fragment-index="7">Automated</p>
+                <p class="fragment" data-fragment-index="8">Fast</p>
+            </section>
+            <!-- COVER ALL CODE PATHS -->
+            <section>
+                <section id="cover-all-code-paths">
+                    <h2>Better Unit Test Practices</h2>
+                    <p class="large-text">Cover All Code Paths</p>
+                </section>
+                <section id="cover-all-code-paths-example">
+                    <pre><code data-noescape class="csharp">
+                        private void outputLine( int result )
+                        {
+                            if ( Console != null )
+                            {
+                                Console.WriteLine( result.ToString() );
+                            }
+                        }
+                    </code></pre>
+                </section>
+            </section>
+           <!-- COVER EDGE CASES -->
+            <section>
+               <section id="cover-edge-cases">
+                   <h2>Better Unit Test Practices</h2>
+                   <p class="large-text">Cover Edge Cases and Non-Standard Cases</p>
+               </section>
+               <section id="cover-edge-cases-example">
+                   <pre><code data-noescape class="csharp">
+                   [Test]
+                   public void Add_WhenGivenNumbersThatOverflowInt32_DoesSomething()
+                   {
+                       // Arrange (Given)
+                       var stringCalculator = new StringCalculator();
+
+                       // Act (When)
+                       var result = stringCalculator.Add( 
+                            string.Format( "{0},{1}", int.MaxValue, 1 ) );
+
+                       // Assert (Then)
+                       // WHAT SHOULD HAPPEN?
+                   }
+                    </code></pre>
+               </section>
+               <section>
+                   <img src="images/gangnam-style.png" alt="Gangnam Style Article">
+               </section>
+           </section>
+           <!-- LONG DESCRIPTIVE NAMES -->
+            <section>
+               <section id="long-descriptive-names">
+                   <h2>Better Unit Test Practices</h2>
+                   <p class="large-text">Long, Descriptive Names</p>
+               </section>
+               <section id="long-descriptive-names-example">
+                   <pre><code data-noescape class="csharp">
+                   public void Add_WhenPassedNegativeNumbers_ThrowsException()
+                   </code></pre>
+               </section>
+           </section>
+           <!-- CLEAN RECOGNIZABLE STRUCTURE -->
+            <section>
+               <section id="clean-recognizable-structure">
+                   <h2>Better Unit Test Practices</h2>
+                   <p class="large-text">Clean, Recognizable Structure</p>
+               </section>
+               <section id="clean-recognizable-structure-example">
+                   <pre><code data-noescape class="csharp">
+                   // Arrange (Given)
+                   var stringCalculator = new StringCalculator();
+
+                   // Act (When)
+                   TestDelegate testDelegate = delegate 
+                   { 
+                        stringCalculator.Add( "-1,2" ); 
+                   };
+
+                   // Assert (Then)
+                   Assert.Throws<Exception>( testDelegate );
+                   </code></pre>
+               </section>
+           </section>
+           <!-- DEPENDENCIES ON EXTERNAL RESOURCES -->
+            <section>
+               <section id="dependencies-on-external-resources">
+                   <h2>Bad Unit Test Practices</h2>
+                   <p class="large-text">Dependencies on External Resources</p>
+               </section>
+               <section id="dependencies-on-external-resources-example-1">
+                   <pre><code data-noescape class="csharp">
+                   var networkPath = @"\\Server\Vendor Portal\Invoices\";
+                   </code></pre>
+               </section>
+               <section id="dependencies-on-external-resources-example-2">
+                   <pre><code data-noescape class="csharp">
+                   using ( var connection = 
+                        new SqlConnection( "server=localhost\\SQLExpress;" +
+                                            "Database=default;" +
+                                            "integrated security=true;" ) )
+                   </code></pre>
+               </section>
+               <section id="dependencies-on-external-resources-example-3">
+                   <pre><code data-noescape class="csharp">
+                   private void sendCommandToExternalApplication( 
+                        object sender, EventArgs e )
+                   {
+                       foreach ( var process in _processes )
+                       {
+                           var result = SetForegroundWindow( process.MainWindowHandle );
+
+                           if ( result != 0 ) 
+                               SendKeys.SendWait( "{F12}" );
+                           else
+                               throw new Exception( 
+                                    string.Format( "Could not find program {0}", 
+                                    programName ) );
+                       }
+                   }
+                   </code></pre>
+               </section>
+               <section id="dependencies-on-external-resources-example-4">
+                   <pre><code data-noescape class="csharp">
+                   public void PostToWebService( ServiceRequest serviceRequest )
+                   {
+                       var serviceClient = new ServiceClient();
+                                
+                       var serviceResponse = serviceClient.PostRequest( serviceRequest );
+
+                       validateResponse( serviceResponse );
+                   }
+                   </code></pre>    
+               </section>
+           </section>
+           <!-- NON-DETERMINISTIC DEPENDENCIES -->
+            <section>
+               <section id="non-deterministic-dependencies">
+                   <h2>Bad Unit Test Practices</h2>
+                   <p class="large-text">Dependencies on Objects With Non-Deterministic Results</p>
+               </section>
+               <section id="non-deterministic-dependencies-example-1">
+                   <pre><code data-noescape class="csharp">
+                   DateTime.Now;
+                   </code></pre>    
+               </section>
+               <section id="non-deterministic-dependencies-example-2">
+                   <pre><code data-noescape class="csharp">
+                   var newDate = date.Add( new TimeSpan( 1000 ) );
+                   </code></pre>    
+               </section>
+           </section>
+           <!-- ENVIRONMENTAL DEPENDENCIES -->
+            <section>
+               <section id="environmental-dependencies">
+                   <h2>Bad Unit Test Practices</h2>
+                   <p class="large-text">Dependencies on Environment</p>
+               </section>
+               <section id="environmental-dependencies-example">
+                   <pre><code data-noescape class="csharp">
+                   public ConfigurationInfo GetApplicationConfiguration()
+                   {
+                       var filename = Environment.GetEnvironmentVariable( 
+                            "PROGRAM_CONFIGURATION_LOCATION" );
+
+                       if ( File.Exists( filename ) )
+                       {
+                           return new ConfigurationInfo( filename );
+                       }
+                       else 
+                       {
+                           filename = Environment.CurrentDirectory 
+                                + "\\Configuration\\CustomConfig.txt";
+                           return new ConfigurationInfo( filename );
+                       }
+                   }
+                   </code></pre>        
+               </section>
+           </section>
+           <!-- DEPENDENCIES ON OTHER TESTS -->
+            <section>
+               <section id="dependencies-on-other-tests">
+                   <h2>Bad Unit Test Practices</h2>
+                   <p class="large-text">Dependencies on Other Tests</p>
+               </section>
+               <section id="dependencies-on-other-tests-example-1">
+                   <pre><code data-noescape class="csharp">
+                   [Test]
+                   public void Insert_WhenGivenNewInvoice_AssignsNewIdentity()
+                   {
+                       // Arrange (Given)
+                       var invoice = new Invoice
+                       {
+                           Customer = "ABC Works",
+                           Amount = 856.82
+                       };
+
+                       // Act (When)
+                       _inMemoryInvoiceRepository.Insert( invoice );
+
+                       // Assert (Then)
+                       Assert.AreEqual( invoice.Id, 1 );
+                   }
+                   </code></pre>
+               </section>
+               <section id="dependencies-on-other-tests-example-2" data-markdown>
+                   <script type="text/template">
+                   ```csharp                   
+                   [Test]
+                   public void Find_ReturnsInsertedInvoice()
+                   {
+                       // Arrange (Given)
+
+                       // Act (When)
+                       var invoice = _inMemoryInvoiceRepository.Find( 1 );
+
+                       // Assert (Then)
+                       Assert.AreEqual( invoice.Customer, "ABC Works" );
+                       Assert.AreEqual( invoice.Amount = 856.82 );
+                   }
+                   ```
+                   </script>
+               </section>
+           </section>
+            <!-- BENEFITS OF UNIT TESTING -->
+            <section id="benefits-of-unit-testing">
+                <h2>Benefits of Unit Testing</h2>
+                <p class="fragment" data-fragment-index="1">The Code Works</p>
+                <p class="fragment" data-fragment-index="2">Immediate Feedback</p>
+                <p class="fragment" data-fragment-index="3">Isolated Testing</p>
+                <p class="fragment" data-fragment-index="4">Less Debugging</p>
+                <p class="fragment" data-fragment-index="5">Fewer Bugs</p>
+                <p class="fragment" data-fragment-index="6">Testable Code</p>
+            </section>
+            <!-- FIRST CLASS CITIZENS -->
+            <section id="first-class-citizens">
+                <h2>Unit Tests are First-Class Citizens</h2>
+                <p class="large-text" class="fragment" data-fragment-index="1" >Production Code is</p>
+                <p class="fragment" data-fragment-index="2">Flexible</p>
+                <p class="fragment" data-fragment-index="3">Maintainable</p>
+                <p class="fragment" data-fragment-index="4">Reusable</p>
+            </section>
+            <!-- LONG METHODS -->
+            <section>
+                <section id="long-methods">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">Long Methods Performing Multiple Operations</p>
+                </section>
+                <section id="long-method-example-1">
+                    <pre><code data-noescape class="csharp">
+                    public Beer BoilWort()
+                    {
+                        if ( !WortIsReadyToBoil() )
+                            throw new Exception( "Mashing failed to produce usable wort" );
+                        if ( !HopsForWortAreInInventory() )
+                            throw new Exception( "No hops for boil" );
+                        if ( !BrewKettleAvailable() )
+                            throw new Exception( "No brew kettle ready for boil" );
+                        if ( !YeastIsInInventory() )
+                            throw new Exception( "No yeast available for fermentation" );
+                        if ( !FermentationVesselReady() )
+                            throw new Exception( "No vessel available for fermentation" );
+
+                        boilMash();
+                    }
+                    </code></pre>
+                </section>
+                <section id="long-method-example-2a">
+                    <pre><code data-noescape class="csharp">
+                    [Test]
+                    public void BoilWort_WhenGivenGoodWort_ReturnsReadyForFermentation()
+                    {
+                        // Arrange (Given)
+                        var wortMock = new Mock<Wort>();
+                        wortMock.Setup( w => w.ReadyForBoil().Returns( true ) );
+
+                        var hopsInventoryManagerMock = new Mock<HopsInventoryManager>();
+                        hopsInventoryManagerMock.Setup( hi => 
+                            hi.GetHopsForWort().Returns( new Hops() ) );
+
+                        var brewKettles = new List<BrewKettle>();
+                        brewKettles.Add( new Mock.Of<BrewKettle>( isReady: true ) );
+                        ...
+                    }
+                    </code></pre>
+                </section>
+                <section id="long-method-example-2b">
+                    <pre><code data-noescape class="csharp">
+                    [Test]
+                    public void BoilWort_WhenGivenGoodWort_ReturnsReadyForFermentation()
+                    {
+                        ...
+                        var yeastInventoryManagerMock = new Mock<YeastInventoryManager>();
+                        yeastInventoryManagerMock.Setup( yi => 
+                            yi.GetYeastForFermenation().Returns( new Yeast() ) );
+
+                        var fermentationVessels = new List<FermentationVessel>();
+                        fermentationVessels.Add( new Mock.Of<FermentationVessel>( isReady: true ) );
+                        ...
+                    }
+                    </code></pre>
+                </section>
+                <section id="long-method-example-2c">
+                    <pre><code data-noescape class="csharp">
+                    [Test]
+                    public void BoilWort_WhenGivenGoodWort_ReturnsReadyForFermentation()
+                    {
+                        ...
+                        var boilStep = new BoilStep( wort, 
+                            hopsInventoryManagerMock.Object, 
+                            brewKettles, 
+                            yeastInventoryManagerMock.Object,
+                            fermentationVessels )
+
+                        // Act (When)
+                        var actualResult = boilStep.BoilWort();
+
+                        // Assert (Then)
+                        Assert.AreEqual( actualResult, Recipes.IPA.PostBoilWort )
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- TALL ARCHITECTURES -->
+            <section>
+                <section id="tall-architectures">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">Tall Architectures</p>
+                </section>
+                <section id="tall-architectures-example-1">
+                    <pre><code data-noescape class="csharp">
+                    public class Mill
+                    {
+                        public MashTun MashTun { get; set; }
+                    }
+
+                    public class MashTun
+                    {
+                        public Boiler Boiler { get; set; }
+                    }
+
+                    public class Boiler
+                    {
+                        public Fermenter Fermenter { get; set; }
+                    }
+
+                    public class Fermenter
+                    {
+                        public Packager Packager { get; set; }
+                    }
+
+                    public class Packager
+                    {
+                        ...
+                    }
+                    </code></pre>
+                </section>
+                <section id="tall-architectures-example-2">
+                    <pre><code data-noescape class="csharp">
+                    public class Mill
+                    {
+                        public Beer BrewBeer()
+                        {
+                            var malt = millGrains();
+                            return MashTun.MashMalt( malt );
+                        }
+                    }
+
+                    public class MashTun
+                    {
+                        public Beer MashMalt( Malt malt )
+                        {
+                            var wort = mash( malt );
+                            var lauteredWort = lauterWort( wort );
+                            return Boiler.BoilWort( lauteredWort );
+                        }
+                    }
+
+                    public class Boiler
+                    {
+                        public Beer BoilWort( Wort wort )
+                        {
+                            var wort = boil( wort );
+                            var cooledWort = coolWort( wort );
+                            return Fermenter.FermentBeer( cooledWort );
+                        }
+                    }
+
+                    public class Fermenter
+                    {
+                        public Beer FermentBeer( Wort wort )
+                        {
+                            var beer = ferment( wort );
+                            var filteredBeer = filter( beer );
+                            return package( filteredBeer );
+                        }
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- DEEP INHERITANCE HIERARCHIES -->
+            <section>
+                <section id="deep-inheritance-hierarchies">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">Deep Inheritance Hierarchies</p>
+                </section>
+                <section id="deep-inheritance-hierarchies-example-1">
+                    <pre><code data-noescape class="csharp">
+                    public class Shape { }
+                        
+                    public class Triangle : Shape { }
+
+                    public class IsoscelesTriangle : Triangle { }
+
+                    public class RightIsoscelesTriangle : IsoscelesTriangle { }
+                    </code></pre>
+                </section>
+                <section id="deep-inheritance-hierarchies-example-2">
+                    <pre><code data-noescape class="csharp">
+                    public class RightIsoscelesTriangle : IsoscelesTriangle
+                    {
+                        public override void Draw()
+                        {
+                            drawTriangle();
+                            base.Draw();
+                        }
+                    }
+                    </code></pre>
+                </section>
+                <section id="deep-inheritance-hierarchies-example-3">
+                    <pre><code data-noescape class="csharp">
+                    public RightIsoscelesTriangle : IShape
+                    {
+                        public void Draw()
+                        {
+                            drawTriangle();
+                        }
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- COMPLEX CONDITIONAL LOGIC -->
+            <section>
+                <section id="complex-conditional-logic">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">Complex Conditional Logic</p>
+                </section>
+                <section id="complex-conditional-logic-example-1">
+                    <pre><code data-noescape class="csharp">
+                    public bool CheckIfAllProcessesCompleted()
+                    {
+                    var firstProcessCompleted = false;
+                    var secondProcessCompleted = false;
+                    var allCompleted = false;
+
+                    if ( _runFirstProcess.Checked )
+                    {
+                        if ( _firstProcess.Completed )
+                        {
+                            firstProcessCompleted = true;
+                        }
+                        else
+                        {
+                            firstProcessCompleted = false;
+                            allCompleted = false;
+                        }
+                    }
+                    else
+                    {
+                        firstProcessCompleted = true;
+                    }
+
+                    if ( _runSecondProcess.Checked )
+                    {
+                        if ( _secondProcess.Completed )
+                        {
+                            secondProcessCompleted = true;
+
+                            if ( firstProcessCompleted )
+                            {
+                                allCompleted = true;
+                            }
+                            else
+                            {
+                                allCompleted = false;
+                            }
+                        }
+                        else
+                        {
+                            allCompleted = false;
+                        }
+                    }
+                    else
+                    {
+                        secondProcessCompleted = true;
+
+                        if ( firstProcessCompleted )
+                        {
+                            allCompleted = true;
+                        }
+                        else
+                        {
+                            allCompleted = false;
+                        }
+                    }
+
+                    return allCompleted;
+                    }
+                    </code></pre>
+                </section>
+                <section id="complex-conditional-logic-example-2">
+                    <pre><code data-noescape class="csharp">
+                    public bool CheckIfAllProcesesCompleted()
+                    {
+                        return processes.Where( p => p.Checked )
+                                        .All( p => p.Completed );
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- HIGH DEGREE OF COUPLING -->
+            <section>
+                <section id="high-degree-of-coupling">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">High Degree of Coupling</p>
+                </section>
+                <section id="high-degree-of-coupling-example-1a">
+                   <pre><code data-noescape class="csharp">
+                    public class InvoiceSender 
+                    {
+                        private Invoice _invoice;
+
+                        private DatabaseWriter _databaseWriter = new DatabaseWriter();
+                        private AccountingServiceWriter _accountingServiceWriter = 
+                            new AccountingServiceWriter();
+                        private CustomerPortalWriter _customerPortalWriter = 
+                            new CustomerPortalWriter();
+                        
+                        public InvoiceSender( Invoice _invoice )
+                        {
+                            _invoice = invoice;
+                        } 
+                    }
+                    </code></pre>
+                </section>
+                <section id="high-degree-of-coupling-example-1b">
+                   <pre><code data-noescape class="csharp">
+                    public class InvoiceSender 
+                    {
+                        public void SendToDatabase()
+                        {
+                            _databaseWriter.InsertInvoice( _invoice );
+                        }
+
+                        public void SendToAccountingService()
+                        {
+                            _accountingServiceWriter.SendInvoice( _invoice );
+                        }
+
+                        public void SendToCustomerPortal()
+                        {
+                            _customerPortalWriter.SendInvoice( _invoice );
+                        }         
+                    }
+                    </code></pre>
+                </section>
+                <section id="high-degree-of-coupling-example-2">
+                   <pre><code data-noescape class="csharp">
+                    public void SendInvoice( IExportInvoice invoiceExporter )
+                    {
+                        invoiceExporter.Send( _invoice );
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- NEW OPERATORS -->
+            <section id="new-operators" data-markdown>
+                <script type="text/template">
+                ## What Makes Hard-to-Test Code?  
+                `new` operators in your Business Logic are a ** Code Smell **   
+                </script>             
+            </section>
+            <!-- PROCEDURAL CODE AND STATIC METHODS -->
+            <section>
+                <section id="procedural-code-static-methods">
+                    <h2>What Makes Hard-to-Test Code?</h2>
+                    <p class="large-text">Procedural Code and Static Methods</p>
+                </section>
+                <section id="procedural-code-static-methods-example-1">
+                   <pre><code data-noescape class="csharp">
+                    public static void SendMemberRenewalNotifications()
+                    {
+                        var members = MemberManager.GetMembersForRenewal();
+
+                        foreach ( var member in members )
+                        {
+                            if ( member.CommunicationPreference == 
+                                CommunicationPreference.Email )
+                                MemberCommunicator.SendEmailToMember( 
+                                    member, RenewalNofitication.EmailContent );
+
+                            if ( member.CommunicationPreference == 
+                                CommunicationPreference.SMS )
+                                MemberCommunicator.SendSMSToMember( 
+                                    member, RenewalNofitication.SMSContent );
+
+                            if ( member.CommunicationPreference == 
+                                CommunicationPreference.Phone )
+                                MemberCommunicator.CallMember( 
+                                    smember, RenewalNofitication.PhoneScript );
+                        }
+                    }
+                    </code></pre>
+                </section>
+                <section id="procedural-code-static-methods-example-2">
+                   <pre><code data-noescape class="csharp">
+                    public class MemberNotifier
+                    {
+                        private IEnumerable<Member> _members;
+
+                        public MemberNotifier( IEnumerable<Member> members )
+                        {
+                            _members = members;
+                        }
+
+
+                        public void SendRenewalNotification( 
+                            IMemberCommunicator memberCommunicator )
+                        {
+                            memberCommunicator.SendRenewalNotification( _members );
+                        }
+                    }
+                    </code></pre>
+                </section>
+            </section>
+            <!-- BENEFITS OF TESTABLE CODE -->
+            <section id="benefits-of-testable-code">
+                <h2>Benefits of Writing Testable Code</h2>
+                <p class="fragment" data-fragment-index="1">Short, Clean Methods</p>
+                <p class="fragment" data-fragment-index="2"><i>That only perform one function</i></p>
+                <p class="fragment" data-fragment-index="3">Flat architectures</p>
+                <p class="fragment" data-fragment-index="4">Loose coupling</p>
+                <p class="fragment" data-fragment-index="5"><i>With well composed objects</i></p>
+                <p class="fragment" data-fragment-index="6"><i>And dependencies with variable implementations</i></p>
+                <p class="fragment" data-fragment-index="7">Clear Boundaries</p>
+            </section>
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        $(function() {
+            $("code").each(function(index) {
+                var t = $(this).text();
+                var strs = t.split("\n");
+                var firstN = 0;
+                if (strs[0].trim().length <= 1) {
+                    firstN = 1;
+                }
+                var first = strs[firstN].trimLeft();
+                var diff = strs[firstN].length - first.length;
+                var result = "";
+                //console.log(firstN,diff);
+                //console.log(t);
+                for (var s in strs) {
+                    //console.log(strs[s].substring(diff));
+                    result = result + strs[s].substring(diff) + "\n";
+                }
+                $(this).text(result);
+            });
+        });
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+            slideNumber: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                    src: 'plugin/markdown/marked.js'
+                }, {
+                    src: 'plugin/markdown/markdown.js'
+                }, {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                }, {
+                    src: 'plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function() {
+                        hljs.configure({
+                            tabReplace: '    ', // 4 spaces
+                        });
+                        hljs.initHighlightingOnLoad();
+                    }
+                }, {
+                    src: 'socket.io/socket.io.js',
+                    async: true
+                }, {
+                    src: 'plugin/notes-server/client.js',
+                    async: true
+                },
+
+                // Zoom in and out with Alt+click
+                {
+                    src: 'plugin/zoom-js/zoom.js',
+                    async: true
+                },
+
+                // Speaker notes
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                }
+            ]
+        });
+    </script>
+</body>
+
+</html>
