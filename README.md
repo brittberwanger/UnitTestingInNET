@@ -14,4 +14,4 @@ Slides can be viewed at https://brittberwanger.github.io/UnitTestingInNET/
 
 ## Watch the presentation
 
-The presentation was recorded for UserGroup.tv and the direct link will be posted here as soon as it is up
+The presentation was recorded for UserGroup.tv and can be viewed [here] (http://usergroup.tv/videos/unit-testing-in-net).
